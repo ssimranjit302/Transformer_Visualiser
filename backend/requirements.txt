@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+torch
+torchvision
+numpy
+python-multipart
+pydantic
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+httpx
+nbconvert
+nbformat

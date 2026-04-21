@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Synthetic Observer | Vision Transformer Training</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#aaffdc",
+                        "on-primary": "#005762",
+                        "secondary": "#a68cff",
+                        "on-primary-fixed": "#003840",
+                        "secondary-fixed-dim": "#cabaff",
+                        "tertiary-dim": "#00edb4",
+                        "surface-container-high": "#141f38",
+                        "error-container": "#9f0519",
+                        "surface-variant": "#192540",
+                        "on-background": "#dee5ff",
+                        "on-primary-container": "#004d57",
+                        "inverse-on-surface": "#4d556b",
+                        "on-surface-variant": "#a3aac4",
+                        "inverse-primary": "#006976",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary-container": "#005c44",
+                        "secondary-fixed": "#d8caff",
+                        "surface-container": "#0f1930",
+                        "secondary-dim": "#7e51ff",
+                        "surface-dim": "#060e20",
+                        "primary-container": "#00e3fd",
+                        "surface-tint": "#81ecff",
+                        "on-secondary-fixed-variant": "#591bdc",
+                        "on-secondary": "#25006b",
+                        "on-error-container": "#ffa8a3",
+                        "primary": "#81ecff",
+                        "background": "#060e20",
+                        "on-surface": "#dee5ff",
+                        "surface-bright": "#1f2b49",
+                        "on-tertiary-fixed": "#004734",
+                        "error": "#ff716c",
+                        "outline": "#6d758c",
+                        "on-tertiary": "#00654b",
+                        "surface": "#060e20",
+                        "on-secondary-fixed": "#3b00a0",
+                        "outline-variant": "#40485d",
+                        "on-tertiary-fixed-variant": "#00664c",
+                        "on-secondary-container": "#e4daff",
+                        "primary-fixed-dim": "#00d4ec",
+                        "error-dim": "#d7383b",
+                        "inverse-surface": "#faf8ff",
+                        "tertiary-container": "#00fdc1",
+                        "tertiary-fixed": "#00fdc1",
+                        "on-error": "#490006",
+                        "primary-dim": "#00d4ec",
+                        "primary-fixed": "#00e3fd",
+                        "tertiary-fixed-dim": "#00edb4",
+                        "surface-container-low": "#091328",
+                        "surface-container-highest": "#192540",
+                        "secondary-container": "#591adc",
+                        "on-primary-fixed-variant": "#005762"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #060e20;
+            color: #dee5ff;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(129, 236, 255, 0.4);
+        }
+
+        .synthetic-gradient {
+            background: linear-gradient(45deg, #81ecff, #a68cff);
+        }
+
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            background: rgba(25, 37, 64, 0.4);
+            border: 1px solid rgba(64, 72, 93, 0.15);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-surface-dim selection:bg-primary/30 min-h-screen">
+    <!-- Top Navigation Bar -->
+    <nav
+        class="fixed top-0 w-full z-50 bg-[#091328]/80 backdrop-blur-xl border-b border-[#40485d]/15 shadow-[0px_0px_20px_rgba(129,236,255,0.05)] flex justify-between items-center px-6 h-16 w-full">
+        <div class="flex items-center gap-8">
+            <span class="text-xl font-bold text-[#81ecff] tracking-tighter font-['Space_Grotesk'] uppercase">Synthetic
+                Observer</span>
+            <div class="hidden md:flex gap-6">
+                <a class="text-[#dee5ff]/60 hover:text-[#dee5ff] transition-colors font-['Space_Grotesk'] text-[#dee5ff] uppercase tracking-wider text-sm"
+                    href="#">Docs</a>
+                <a class="text-[#dee5ff]/60 hover:text-[#dee5ff] transition-colors font-['Space_Grotesk'] text-[#dee5ff] uppercase tracking-wider text-sm"
+                    href="#">Logs</a>
+                <a class="text-[#dee5ff]/60 hover:text-[#dee5ff] transition-colors font-['Space_Grotesk'] text-[#dee5ff] uppercase tracking-wider text-sm"
+                    href="#">Support</a>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="p-2 text-[#dee5ff]/60 hover:bg-[#192540] rounded-lg transition-all active:scale-95"><span
+                    class="material-symbols-outlined">settings</span></button>
+            <button class="p-2 text-[#dee5ff]/60 hover:bg-[#192540] rounded-lg transition-all active:scale-95"><span
+                    class="material-symbols-outlined">notifications</span></button>
+            <button class="p-2 text-[#dee5ff]/60 hover:bg-[#192540] rounded-lg transition-all active:scale-95"><span
+                    class="material-symbols-outlined">account_circle</span></button>
+        </div>
+    </nav>
+    <!-- Side Navigation Bar -->
+    <aside
+        class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#091328] to-[#060e20] border-r border-[#40485d]/15 hidden md:flex flex-col pt-20 pb-6 px-4 gap-y-4">
+        <div class="mb-4 px-2">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-surface-container-highest border border-primary/20 flex items-center justify-center overflow-hidden">
+                    <img alt="Research Scientist"
+                        data-alt="Headshot of a futuristic research scientist in a dark room with subtle blue ambient lighting on their face"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsEJQt5p3aM3tuynZrvsMFaI0qPLLwKlBQnTfk2DcMqEZtiXjyZbjs-OPyVNuU0tlZ4nLHjKG0AqcA0uvtbsMTb98amtAlGK5ajxyNqnN1v3tqS2wur0u8fdhuhouDsc6d1J_j8B8FNzxvy-_f7dKvhosrko7EFj7XluVEA1BWBjALLEsKo2zjhc75rSLqlauOL_ik8rqlaACvxp_c9Qz9xjWOaSzT1HtV4XRB7xTxQJzCg3UrXL9wiW27GvLWS1h46Es61wIG2rZ9" />
+                </div>
+                <div>
+                    <div class="font-['Space_Grotesk'] font-black text-[#81ecff] text-sm">Vision Transformer</div>
+                    <div class="text-[10px] text-tertiary uppercase flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Training Active
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 space-y-1">
+            <div
+                class="bg-[#192540] text-[#81ecff] border-r-4 border-[#81ecff] shadow-[0px_0px_15px_rgba(129,236,255,0.1)] px-4 py-3 flex items-center gap-3 cursor-pointer">
+                <span class="material-symbols-outlined">visibility</span>
+                <span class="font-['Inter'] text-sm antialiased font-medium">Vision Models</span>
+            </div>
+            <div
+                class="text-[#dee5ff]/40 hover:text-[#dee5ff]/80 hover:bg-[#091328] px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors duration-200">
+                <span class="material-symbols-outlined">segment</span>
+                <span class="font-['Inter'] text-sm antialiased">Text Models</span>
+            </div>
+        </nav>
+        <button
+            class="mt-auto w-full py-3 bg-primary text-on-primary font-bold rounded-md hover:opacity-90 transition-all active:scale-95 text-xs uppercase tracking-widest">
+            Deploy Model
+        </button>
+        <div class="pt-4 border-t border-outline-variant/15 flex flex-col gap-1">
+            <div
+                class="text-[#dee5ff]/40 hover:text-[#dee5ff]/80 hover:bg-[#091328] px-4 py-2 flex items-center gap-3 cursor-pointer text-sm">
+                <span class="material-symbols-outlined text-sm">biotech</span> Diagnostics
+            </div>
+            <div
+                class="text-[#dee5ff]/40 hover:text-[#dee5ff]/80 hover:bg-[#091328] px-4 py-2 flex items-center gap-3 cursor-pointer text-sm">
+                <span class="material-symbols-outlined text-sm">help_outline</span> Help
+            </div>
+        </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="md:pl-64 pt-20 pb-12 px-6">
+        <!-- Header Section -->
+        <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h1
+                    class="text-4xl md:text-5xl font-['Space_Grotesk'] font-bold text-on-surface uppercase tracking-tight mb-2">
+                    Vision Transformer <span class="text-primary neon-glow">Training</span>
+                </h1>
+                <p class="text-on-surface-variant font-body max-w-2xl">High-precision attention-based architecture
+                    optimization for distributed visual feature synthesis.</p>
+            </div>
+            <button
+                class="bg-primary hover:bg-primary-dim text-on-primary px-8 py-4 font-black rounded-lg transition-all hover:shadow-[0_0_25px_rgba(129,236,255,0.3)] active:scale-95 uppercase tracking-widest text-sm">
+                EXECUTE MODEL TRAINING
+            </button>
+        </header>
+        <!-- Bento Grid Layout -->
+        <div class="grid grid-cols-12 gap-6">
+            <!-- Hyperparameter Panel -->
+            <section class="col-span-12 lg:col-span-4 glass-panel p-6 rounded-xl flex flex-col gap-6">
+                <div class="flex items-center gap-2 text-primary">
+                    <span class="material-symbols-outlined">tune</span>
+                    <h2 class="font-headline font-bold uppercase tracking-wider text-sm">Hyperparameters</h2>
+                </div>
+                <div class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-outline tracking-widest">Dataset</label>
+                        <select
+                            class="w-full bg-surface-container-lowest border-outline-variant/20 rounded px-3 py-2 text-sm focus:border-primary/50 focus:ring-0 text-on-surface">
+                            <option>CIFAR10</option>
+                            <option>CIFAR100</option>
+                            <option>ImageNet-1K</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] uppercase font-bold text-outline tracking-widest">n_embd</label>
+                            <input
+                                class="w-full bg-surface-container-lowest border-outline-variant/20 rounded px-3 py-2 text-sm text-on-surface focus:border-primary/50 focus:ring-0"
+                                type="number" value="128" />
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] uppercase font-bold text-outline tracking-widest">n_head</label>
+                            <input
+                                class="w-full bg-surface-container-lowest border-outline-variant/20 rounded px-3 py-2 text-sm text-on-surface focus:border-primary/50 focus:ring-0"
+                                type="number" value="4" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] uppercase font-bold text-outline tracking-widest">n_layer</label>
+                            <input
+                                class="w-full bg-surface-container-lowest border-outline-variant/20 rounded px-3 py-2 text-sm text-on-surface focus:border-primary/50 focus:ring-0"
+                                type="number" value="6" />
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] uppercase font-bold text-outline tracking-widest">Epochs</label>
+                            <input
+                                class="w-full bg-surface-container-lowest border-outline-variant/20 rounded px-3 py-2 text-sm text-on-surface focus:border-primary/50 focus:ring-0"
+                                type="number" value="5" />
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-outline tracking-widest">Learning
+                            Rate</label>
+                        <input
+                            class="w-full bg-surface-container-lowest border-outline-variant/20 rounded px-3 py-2 text-sm text-on-surface focus:border-primary/50 focus:ring-0"
+                            type="text" value="3e-4" />
+                    </div>
+                </div>
+                <div class="mt-auto pt-6 border-t border-outline-variant/10">
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="text-outline">Estimated Compute</span>
+                        <span class="text-tertiary">14.2 TFLOPs</span>
+                    </div>
+                    <div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+                        <div class="w-2/3 h-full bg-tertiary"></div>
+                    </div>
+                </div>
+            </section>
+            <!-- Architecture Visualization -->
+            <section class="col-span-12 lg:col-span-8 glass-panel p-6 rounded-xl flex flex-col gap-8 overflow-hidden">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-secondary">
+                        <span class="material-symbols-outlined">schema</span>
+                        <h2 class="font-headline font-bold uppercase tracking-wider text-sm">ViT Architecture</h2>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="text-[10px] text-outline flex items-center gap-1"><span
+                                class="w-2 h-2 rounded-sm bg-[#faf0ca]"></span> Norm</span>
+                        <span class="text-[10px] text-outline flex items-center gap-1"><span
+                                class="w-2 h-2 rounded-sm bg-[#90e0ef]"></span> Feed Forward</span>
+                        <span class="text-[10px] text-outline flex items-center gap-1"><span
+                                class="w-2 h-2 rounded-sm bg-[#fb8500]"></span> Attention</span>
+                    </div>
+                </div>
+                <!-- Schematic Flow -->
+                <div class="relative flex flex-col items-center gap-12 py-4">
+                    <!-- Classification Head -->
+                    <div
+                        class="w-64 h-24 bg-secondary rounded-lg flex flex-col items-center justify-center text-on-secondary shadow-[0_0_20px_rgba(166,140,255,0.2)] relative">
+                        <span class="text-xs font-black uppercase tracking-tighter mb-1">Classification Stage</span>
+                        <span class="text-base font-headline font-bold uppercase">MLP Classification Head</span>
+                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-outline-variant"><span
+                                class="material-symbols-outlined">expand_more</span></div>
+                    </div>
+                    <!-- Attention Heads Cluster -->
+                    <div class="grid grid-cols-4 gap-4 w-full max-w-2xl px-4 relative">
+                        <div
+                            class="absolute -top-6 left-1/2 -translate-x-1/2 text-outline-variant h-6 border-l border-dashed border-outline-variant">
+                        </div>
+                        <div
+                            class="h-16 bg-surface-container border border-outline-variant/30 rounded flex items-center justify-center">
+                            <span class="text-[10px] font-bold text-outline">HEAD 01</span>
+                        </div>
+                        <div
+                            class="h-16 bg-surface-container border border-outline-variant/30 rounded flex items-center justify-center">
+                            <span class="text-[10px] font-bold text-outline">HEAD 02</span>
+                        </div>
+                        <div
+                            class="h-16 bg-surface-container border border-outline-variant/30 rounded flex items-center justify-center">
+                            <span class="text-[10px] font-bold text-outline">HEAD 03</span>
+                        </div>
+                        <div
+                            class="h-16 bg-surface-container border border-outline-variant/30 rounded flex items-center justify-center">
+                            <span class="text-[10px] font-bold text-outline">HEAD 04</span>
+                        </div>
+                    </div>
+                    <!-- Encoder Blocks Carousel/Row -->
+                    <div class="w-full overflow-x-auto scrollbar-hide flex gap-4 pb-4">
+                        <!-- L-01 to L-06 -->
+                        <div class="flex-shrink-0 w-44 space-y-2 group">
+                            <div
+                                class="text-[10px] font-black text-center text-outline-variant group-hover:text-primary transition-colors">
+                                BLOCK L-01</div>
+                            <div
+                                class="flex flex-col gap-1 p-2 bg-surface-container-high rounded-lg border border-outline-variant/10">
+                                <div
+                                    class="h-6 bg-[#faf0ca] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Add &amp; Norm</div>
+                                <div
+                                    class="h-6 bg-[#90e0ef] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Feed Forward</div>
+                                <div
+                                    class="h-12 bg-[#fb8500] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm text-center px-2">
+                                    Multi-Head Attention</div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 w-44 space-y-2">
+                            <div class="text-[10px] font-black text-center text-outline-variant">BLOCK L-02</div>
+                            <div
+                                class="flex flex-col gap-1 p-2 bg-surface-container-high rounded-lg border border-outline-variant/10">
+                                <div
+                                    class="h-6 bg-[#faf0ca] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Add &amp; Norm</div>
+                                <div
+                                    class="h-6 bg-[#90e0ef] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Feed Forward</div>
+                                <div
+                                    class="h-12 bg-[#fb8500] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm text-center px-2">
+                                    Multi-Head Attention</div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 w-44 space-y-2">
+                            <div class="text-[10px] font-black text-center text-outline-variant">BLOCK L-03</div>
+                            <div
+                                class="flex flex-col gap-1 p-2 bg-surface-container-high rounded-lg border border-outline-variant/10">
+                                <div
+                                    class="h-6 bg-[#faf0ca] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Add &amp; Norm</div>
+                                <div
+                                    class="h-6 bg-[#90e0ef] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Feed Forward</div>
+                                <div
+                                    class="h-12 bg-[#fb8500] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm text-center px-2">
+                                    Multi-Head Attention</div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 w-44 space-y-2 opacity-60">
+                            <div class="text-[10px] font-black text-center text-outline-variant">BLOCK L-04</div>
+                            <div
+                                class="flex flex-col gap-1 p-2 bg-surface-container-high rounded-lg border border-outline-variant/10">
+                                <div
+                                    class="h-6 bg-[#faf0ca] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Add &amp; Norm</div>
+                                <div
+                                    class="h-6 bg-[#90e0ef] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Feed Forward</div>
+                                <div
+                                    class="h-12 bg-[#fb8500] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm text-center px-2">
+                                    Multi-Head Attention</div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 w-44 space-y-2 opacity-40">
+                            <div class="text-[10px] font-black text-center text-outline-variant">BLOCK L-05</div>
+                            <div
+                                class="flex flex-col gap-1 p-2 bg-surface-container-high rounded-lg border border-outline-variant/10">
+                                <div
+                                    class="h-6 bg-[#faf0ca] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Add &amp; Norm</div>
+                                <div
+                                    class="h-6 bg-[#90e0ef] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Feed Forward</div>
+                                <div
+                                    class="h-12 bg-[#fb8500] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm text-center px-2">
+                                    Multi-Head Attention</div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 w-44 space-y-2 opacity-20">
+                            <div class="text-[10px] font-black text-center text-outline-variant">BLOCK L-06</div>
+                            <div
+                                class="flex flex-col gap-1 p-2 bg-surface-container-high rounded-lg border border-outline-variant/10">
+                                <div
+                                    class="h-6 bg-[#faf0ca] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Add &amp; Norm</div>
+                                <div
+                                    class="h-6 bg-[#90e0ef] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm">
+                                    Feed Forward</div>
+                                <div
+                                    class="h-12 bg-[#fb8500] text-on-surface-variant flex items-center justify-center text-[10px] font-bold rounded-sm text-center px-2">
+                                    Multi-Head Attention</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Flow Arrows (Visual indication) -->
+                    <div
+                        class="absolute top-1/2 left-0 w-full flex justify-between px-12 pointer-events-none opacity-20">
+                        <span class="material-symbols-outlined text-4xl rotate-180">double_arrow</span>
+                        <span class="material-symbols-outlined text-4xl">double_arrow</span>
+                    </div>
+                </div>
+            </section>
+            <!-- Metrics Section -->
+            <section class="col-span-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <!-- Training Loss -->
+                <div class="glass-panel p-5 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] uppercase font-bold text-outline tracking-widest">Training Loss</span>
+                        <span class="text-xs text-primary font-mono">0.0421</span>
+                    </div>
+                    <div class="h-24 flex items-end gap-1">
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[80%] flex-1 rounded-t-sm"></div>
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[70%] flex-1 rounded-t-sm"></div>
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[65%] flex-1 rounded-t-sm"></div>
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[50%] flex-1 rounded-t-sm"></div>
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[45%] flex-1 rounded-t-sm"></div>
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[30%] flex-1 rounded-t-sm"></div>
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[25%] flex-1 rounded-t-sm"></div>
+                        <div class="bg-primary/20 hover:bg-primary transition-colors h-[20%] flex-1 rounded-t-sm"></div>
+                    </div>
+                </div>
+                <!-- Top-1 Accuracy -->
+                <div class="glass-panel p-5 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] uppercase font-bold text-outline tracking-widest">Top-1 Accuracy</span>
+                        <span class="text-xs text-tertiary font-mono">92.4%</span>
+                    </div>
+                    <div class="h-24 relative overflow-hidden">
+                        <svg class="w-full h-full stroke-tertiary fill-tertiary/5 stroke-2" viewbox="0 0 100 40">
+                            <path
+                                d="M0,40 L10,35 L20,38 L30,30 L40,25 L50,28 L60,18 L70,15 L80,12 L90,10 L100,8 L100,40 Z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!-- LR Decay -->
+                <div class="glass-panel p-5 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] uppercase font-bold text-outline tracking-widest">LR Decay</span>
+                        <span class="text-xs text-secondary font-mono">1.2e-5</span>
+                    </div>
+                    <div class="h-24 flex items-center justify-center">
+                        <div class="w-full h-1 bg-surface-container rounded-full relative">
+                            <div class="absolute left-0 top-0 h-full w-3/4 bg-secondary"></div>
+                            <div
+                                class="absolute left-3/4 -top-1 w-3 h-3 rounded-full bg-secondary shadow-[0_0_10px_#a68cff]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Val Error -->
+                <div class="glass-panel p-5 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] uppercase font-bold text-outline tracking-widest">Val Error</span>
+                        <span class="text-xs text-error font-mono">4.18%</span>
+                    </div>
+                    <div class="h-24 grid grid-cols-4 items-end gap-2">
+                        <div class="bg-error/10 h-[60%] border-t border-error"></div>
+                        <div class="bg-error/10 h-[55%] border-t border-error"></div>
+                        <div class="bg-error/10 h-[48%] border-t border-error"></div>
+                        <div class="bg-error/10 h-[42%] border-t border-error"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Background Decorative Elements -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
+        <div class="absolute top-[10%] right-[15%] w-[40rem] h-[40rem] bg-primary/5 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[5%] left-[5%] w-[30rem] h-[30rem] bg-secondary/5 blur-[100px] rounded-full"></div>
+    </div>
+</body>
+
+</html>
